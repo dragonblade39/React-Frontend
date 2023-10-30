@@ -17,7 +17,7 @@ function LogIn() {
 
   let handleSubmit = (event) => {
     const obj = { username, password };
-    const url = "http://localhost:5500/signup/login";
+    const url = "https://reactbackend-mhmh.onrender.com/signup/login";
     axios
       .post(url, obj)
       .then((res) => {

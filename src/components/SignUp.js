@@ -24,7 +24,7 @@ function SignUp() {
     const obj = { name, username, email, password, password1, gender };
     console.log(obj);
     console.log(gender);
-    const url = "http://localhost:5500/signup/create-fitness";
+    const url = "https://reactbackend-mhmh.onrender.com/signup/create-fitness";
     axios
       .post(url, obj)
       .then((res) => {
