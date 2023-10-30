@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import { Box } from "@mui/material";
+import Login from "./components/LogIn";
+import SignUp from "./components/SignUp";
+import ForgotPassword from "./components/ForgotPassword";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box>
+      {/* <Box className={`${styles["main-container"]}`}> */}
+      <Box>
+        <Routes>
+          <Route exact path="/" element={<Login />} />
+          <Route exact path="/sign-up" element={<SignUp />} />
+          <Route exact path="/forgot-password" element={<ForgotPassword />} />
+          <Route exact path="*" element={<SignUp />} />
+        </Routes>
+      </Box>
+    </Box>
   );
 }
 

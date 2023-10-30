@@ -1,0 +1,6 @@
+/* CSS */
+@media screen and (max-width: 768px) {
+    .bold {
+        font-size: 100px !important;
+    }
+}
