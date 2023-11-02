@@ -144,7 +144,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalEmail"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Name
                 </Form.Label>
                 <Col sm={10}>
@@ -157,7 +161,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalUsername"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Username
                 </Form.Label>
                 <Col sm={10}>
@@ -170,7 +178,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalName"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Email
                 </Form.Label>
                 <Col sm={10}>
@@ -183,7 +195,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalName"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Password
                 </Form.Label>
                 <Col sm={10}>
@@ -196,7 +212,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalGender"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Gender
                 </Form.Label>
                 <Col sm={10}>
@@ -209,7 +229,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalGender"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Height
                 </Form.Label>
                 <Col sm={10}>
@@ -222,7 +246,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalGender"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Weight
                 </Form.Label>
                 <Col sm={10}>
@@ -235,7 +263,11 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalAge"
               >
-                <Form.Label column sm={2}>
+                <Form.Label
+                  column
+                  sm={2}
+                  style={{ fontWeight: "bold", fontSize: "large" }}
+                >
                   Age
                 </Form.Label>
                 <Col sm={10}>

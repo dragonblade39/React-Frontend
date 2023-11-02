@@ -406,7 +406,7 @@ function Update() {
                     disabled={isUpdating}
                     className="me-3"
                   >
-                    {isUpdating ? "Updating..." : "Update Profile"}
+                    {isUpdating ? "Updating..." : "Done"}
                   </Button>
                   <Button
                     type="button"
