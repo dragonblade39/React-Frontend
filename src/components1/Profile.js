@@ -64,7 +64,7 @@ function Profile() {
 
   const cardStyle = {
     width: "80%", // Set the desired width
-    maxWidth: "600px", // Set the maximum width
+    maxWidth: "800px", // Set the maximum width
     margin: "0 auto", // Center the card horizontally
   };
 
