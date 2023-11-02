@@ -16,6 +16,7 @@ function ForgotPassword() {
 
   let handleSubmit = (event) => {
     const obj = { name, username, password };
+    // const url = "http://localhost:5500/signup/forgot-password";
     const url = "https://reactbackend-mhmh.onrender.com/signup/forgot-password";
     axios
       .post(url, obj)
@@ -51,10 +52,6 @@ function ForgotPassword() {
     left: 0,
     right: 0,
     bottom: 0,
-  };
-
-  const cardBackgroundStyle = {
-    background: "linear-gradient(135deg,#93A5CF , #E4EfE9)",
   };
 
   const labelStyle = {
@@ -93,7 +90,7 @@ function ForgotPassword() {
         <Col md={6}>
           <Card
             style={{
-              background: "linear-gradient(135deg, #93A5CF , #E4EfE9)",
+              background: "linear-gradient(135deg,#47BDBF , #79ABB6)",
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               padding: "20px",
             }}

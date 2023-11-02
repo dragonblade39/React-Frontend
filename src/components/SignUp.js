@@ -19,17 +19,33 @@ function SignUp() {
   const [password, setPassword] = useState();
   const [password1, setPassword1] = useState();
   const [gender, setGender] = useState("Male");
-
+  const [date, setDate] = useState();
+  const [height, setHeight] = useState();
+  const [weight, setWeight] = useState();
   let handleSubmit = (event) => {
-    const obj = { name, username, email, password, password1, gender };
+    const bmi = (weight / ((height / 100) * (height / 100))).toFixed(2);
+    console.log(bmi);
+    const obj = {
+      name,
+      username,
+      email,
+      password,
+      password1,
+      gender,
+      date,
+      height,
+      weight,
+      bmi,
+    };
     console.log(obj);
-    console.log(gender);
+    // const url = "http://localhost:5500/signup/create-fitness";
     const url = "https://reactbackend-mhmh.onrender.com/signup/create-fitness";
     axios
       .post(url, obj)
       .then((res) => {
         if (res.status === 200) {
           alert("User added successfully Go to login page to login");
+          window.location.href = "/";
         }
       })
       .catch((err) => {
@@ -105,7 +121,7 @@ function SignUp() {
         <Col md={6}>
           <Card
             style={{
-              background: "linear-gradient(135deg, #93A5CF , #E4EfE9)", // Gradient background
+              background: "linear-gradient(135deg,#47BDBF , #79ABB6)", // Gradient background
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               padding: "20px",
             }}
@@ -220,6 +236,51 @@ function SignUp() {
                   Please select your Gender.
                 </Form.Control.Feedback>
               </FormGroup>
+              <Form.Group controlId="formGroupheight" style={formGroupStyle}>
+                <Form.Label for="height" style={labelStyle}>
+                  Height
+                </Form.Label>
+                <Form.Control
+                  id="height"
+                  type="number"
+                  required
+                  placeholder="Height (in cms)"
+                  onChange={(e) => setHeight(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter your Height in numbers.
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="formGroupweight" style={formGroupStyle}>
+                <Form.Label for="weight" style={labelStyle}>
+                  Weight
+                </Form.Label>
+                <Form.Control
+                  id="dob"
+                  type="number"
+                  placeholder="Weight (in kgs)"
+                  required
+                  onChange={(e) => setWeight(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter your Weight in numbers.
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group controlId="formGroupDob" style={formGroupStyle}>
+                <Form.Label for="password1" style={labelStyle}>
+                  Date of Birth
+                </Form.Label>
+                <Form.Control
+                  id="dob"
+                  type="date"
+                  required
+                  onChange={(e) => setDate(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter your Date of Birth.
+                </Form.Control.Feedback>
+              </Form.Group>
+
               <br />
               <Form.Group as={Row} className="mb-3 justify-content-center">
                 {" "}
@@ -235,6 +296,10 @@ function SignUp() {
           </Card>
         </Col>
       </Container>
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 }
