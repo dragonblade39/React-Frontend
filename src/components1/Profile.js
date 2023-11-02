@@ -12,7 +12,6 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import male from ".././images/male.png";
 
 function Profile() {
   const location = useLocation();
@@ -59,26 +58,26 @@ function Profile() {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    marginTop: "-4%",
+    height: "80vh",
+    paddingTop: "20px",
   };
 
   const cardStyle = {
     width: "80%", // Set the desired width
-    maxWidth: "800px", // Set the maximum width
+    maxWidth: "600px", // Set the maximum width
     margin: "0 auto", // Center the card horizontally
   };
 
   const cardBodyStyle = {
     background: "linear-gradient(135deg, #78D5CB , #E4EfE9)",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
   };
 
   useEffect(() => {
     // Make an API request to fetch user data and set the state variables
     const obj = { username };
-    // const url = "http://localhost:5500/signup/profile";
-    const url = "https://reactbackend-mhmh.onrender.com/signup/profile";
+    const url = "http://localhost:5500/signup/profile";
     axios
       .post(url, obj)
       .then((res) => {
@@ -139,18 +138,13 @@ function Profile() {
       <div style={cardContainerStyle}>
         <Card style={cardStyle}>
           <Card.Body style={cardBodyStyle}>
-            <img src={male} style={{ marginBottom: "2%", marginLeft: "40%" }} />
             <Form onSubmit={update}>
               <Form.Group
                 as={Row}
                 className="mb-3"
                 controlId="formHorizontalEmail"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
                   Name
                 </Form.Label>
                 <Col sm={10}>
@@ -163,11 +157,7 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalUsername"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
                   Username
                 </Form.Label>
                 <Col sm={10}>
@@ -180,11 +170,7 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalName"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
                   Email
                 </Form.Label>
                 <Col sm={10}>
@@ -197,11 +183,7 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalName"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
                   Password
                 </Form.Label>
                 <Col sm={10}>
@@ -214,11 +196,20 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalGender"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
+                  Gender
+                </Form.Label>
+                <Col sm={10}>
+                  <Form.Control type="text" value={gender} readOnly />
+                </Col>
+              </Form.Group>
+
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalGender"
+              >
+                <Form.Label column sm={2}>
                   Height
                 </Form.Label>
                 <Col sm={10}>
@@ -231,11 +222,7 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalGender"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
                   Weight
                 </Form.Label>
                 <Col sm={10}>
@@ -248,11 +235,7 @@ function Profile() {
                 className="mb-3"
                 controlId="formHorizontalAge"
               >
-                <Form.Label
-                  column
-                  sm={2}
-                  style={{ fontWeight: "bold", fontSize: "large" }}
-                >
+                <Form.Label column sm={2}>
                   Age
                 </Form.Label>
                 <Col sm={10}>
@@ -262,7 +245,7 @@ function Profile() {
 
               <Form.Group as={Row} className="mb-3">
                 <Col sm={{ span: 10, offset: 2 }}>
-                  <Button type="submit" className="ms-4 me-5">
+                  <Button type="submit" className="me-5">
                     Update Profile
                   </Button>
                   <Button
