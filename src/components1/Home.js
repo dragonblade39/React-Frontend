@@ -10,7 +10,23 @@ import axios from "axios";
 import "../styles/Home.module.css";
 import Carousel from "react-bootstrap/Carousel";
 import Button from "react-bootstrap/esm/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import { Card, CardColumns } from "react-bootstrap";
+
 function Home() {
+  const [workoutType, setWorkoutType] = useState("");
+  const [selectedWorkoutType, setSelectedWorkoutType] = useState("");
+  const [date, setDate] = useState("");
+  const [fromTime, setFromTime] = useState("");
+  const [toTime, setToTime] = useState("");
+  const [data, setData] = useState([]);
+  const [displayNewForm, setDisplayNewForm] = useState(false);
+  const [cardToDeleteIndex, setCardToDeleteIndex] = useState(-1);
+  const [calories, setCalories] = useState("");
+  const [totalCalories, setTotalCalories] = useState("");
+
   const location = useLocation();
   let username = location.state ? location.state.username : null;
   const [name, setName] = useState("");
@@ -22,6 +38,9 @@ function Home() {
   const [currentSchedule, setCurrentSchedule] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [records, setRecords] = useState([
+    // Your array of records goes here
+  ]);
 
   useEffect(() => {
     if (username === null) {
@@ -50,8 +69,8 @@ function Home() {
 
   useEffect(() => {
     const obj = { username };
-    // const url = "http://localhost:5500/signup/homepage";
-    const url = "https://reactbackend-mhmh.onrender.com/signup/homepage";
+    const url = "http://localhost:5500/signup/homepage";
+    // const url = "https://reactbackend-mhmh.onrender.com/signup/homepage";
     axios
       .post(url, obj)
       .then((res) => {
@@ -166,6 +185,10 @@ function Home() {
 
   const navbarStyle = {
     textAlign: "center",
+    position: "sticky", // Make the navbar sticky
+    top: "0", // Stick to the top of the page
+    zIndex: "100", // Add z-index to ensure it's above other elements
+    background: "linear-gradient(to right , #DCF0ED,#C0E6E1)",
   };
 
   const bold = {
@@ -189,6 +212,226 @@ function Home() {
   const logout = () => {
     username = "";
     navigate("/");
+  };
+  const scrollToTop = () => {
+    window.scrollTo(0, 0); // Scroll to the top of the page
+  };
+
+  const workoutTypeOptions = {
+    "Cardiovascular Workouts": [
+      "Running",
+      "Jogging",
+      "Walking",
+      "Cycling",
+      "Swimming",
+      "Rowing",
+      "Jumping rope",
+      "Aerobics",
+      "Dancing",
+    ],
+    "Strength Training": [
+      "Weightlifting",
+      "Bodyweight exercises (e.g., push-ups, pull-ups)",
+      "Resistance band workouts",
+      "Kettlebell exercises",
+    ],
+    "Flexibility and Mobility": ["Yoga", "Pilates", "Stretching routines"],
+    "High-Intensity Interval Training (HIIT)": [
+      "Interval running",
+      "Tabata workouts",
+      "CrossFit",
+      "Circuit training",
+    ],
+    "Group Fitness Classes": [
+      "Spinning",
+      "Zumba",
+      "Barre",
+      "Bootcamp",
+      "Kickboxing",
+    ],
+    "Outdoor Activities": [
+      "Hiking",
+      "Trail running",
+      "Rock climbing",
+      "Mountain biking",
+    ],
+    "Sports and Recreational Activities": [
+      "Tennis",
+      "Soccer",
+      "Basketball",
+      "Golf",
+      "Volleyball",
+    ],
+    "Martial Arts and Combat Sports": [
+      "Boxing",
+      "Muay Thai",
+      "Brazilian Jiu-Jitsu",
+      "Karate",
+    ],
+    "Specialized Workouts": [
+      "CrossFit",
+      "Bodybuilding",
+      "Powerlifting",
+      "Strongman",
+      "Gymnastics",
+    ],
+    "Mind-Body Exercises": ["Tai Chi", "Qigong", "Meditation"],
+    "Rehabilitation Exercises": [
+      "Physical therapy exercises",
+      "Post-injury or surgery rehab routines",
+    ],
+    "Functional Training": [
+      "Functional movement exercises",
+      "Balance and stability exercises",
+    ],
+    "Indoor and Home Workouts": [
+      "Home workout routines",
+      "Treadmill workouts",
+      "Elliptical workouts",
+      "Stationary bike workouts",
+    ],
+    "Water-Based Workouts": ["Water aerobics", "Aqua jogging", "Water polo"],
+    "Winter Sports": ["Skiing", "Snowboarding", "Ice skating"],
+    "Childhood Games and Activities": [
+      "Tag",
+      "Hide and seek",
+      "Playground activities",
+    ],
+  };
+
+  const handleWorkoutNameChange = (e) => {
+    setWorkoutType(e.target.value);
+    setSelectedWorkoutType(""); // Reset the selected workout type
+  };
+
+  // Handle the change in the Type of workout selection
+  const handleWorkoutTypeChange = (e) => {
+    setSelectedWorkoutType(e.target.value);
+  };
+
+  const handleDate = (e) => {
+    setDate(e.target.value);
+  };
+  const handleFromTime = (e) => {
+    setFromTime(e.target.value);
+  };
+  const handleToTime = (e) => {
+    setToTime(e.target.value);
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    // Create a FormData object to serialize the form data
+    const obj = {
+      username,
+      workoutType,
+      selectedWorkoutType,
+      date,
+      fromTime,
+      toTime,
+    };
+    const url = "http://localhost:5500/data/createTask";
+    axios
+      .post(url, obj)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(obj);
+        }
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 400) {
+          alert(err.response.data);
+        } else {
+          alert(err.message);
+        }
+      });
+    event.preventDefault();
+
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    // Fetch user history data from your backend
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5500/data?username=${username}`
+        );
+        setData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching history data:", error);
+      }
+    };
+
+    if (username) {
+      fetchData();
+    }
+  }, [username]);
+
+  const handleDelete = (index) => {
+    const updatedRecords = [...records];
+    updatedRecords.splice(index, 1);
+    setRecords(updatedRecords);
+    setDisplayNewForm(true); // Set to true to display the new form
+    setCardToDeleteIndex(index);
+  };
+
+  useEffect(() => {
+    // Fetch user history data from your backend
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5500/history/totalCalories?username=${username}`
+        );
+        const totalCalories = response.data.totalCalories; // Assuming the total calories are in the 'totalCalories' field of the response
+        setTotalCalories(totalCalories);
+        console.log("Hello" + totalCalories);
+      } catch (error) {
+        console.error("Error fetching history data:", error);
+      }
+    };
+
+    fetchData();
+  }, [username]);
+
+  const updateCalories = (index, record) => {
+    const cal = Number(calories);
+    let cal1 = Number(totalCalories);
+    cal1 = setTotalCalories(cal + cal1);
+    const tt = Number(totalCalories) + Number(calories);
+    setTotalCalories(tt);
+    console.log("Calories:" + totalCalories);
+    const obj = {
+      username,
+      workoutType: record.workoutType,
+      selectedWorkoutType: record.selectedWorkoutType,
+      date: record.date,
+      fromTime: record.fromTime,
+      toTime: record.toTime,
+      calories, // Include the calories value here
+      totalCalories: tt,
+    };
+    console.log(record);
+    const url = "http://localhost:5500/history/create";
+    axios
+      .post(url, obj)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(obj);
+          // Optionally, you can reset the calories state after a successful submission
+          setCalories("");
+        }
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 400) {
+          alert(err.response.data);
+        } else {
+          alert(err.message);
+        }
+      });
+    window.location.reload();
   };
 
   return (
@@ -214,8 +457,17 @@ function Home() {
                 as={Link}
                 to="/dashboard"
                 state={{ username }}
+                onClick={scrollToTop}
               >
                 Home
+              </Nav.Link>
+              <Nav.Link
+                style={bold1}
+                as={Link}
+                to="/dashboard"
+                state={{ username }}
+              >
+                Tasks History
               </Nav.Link>
               <Nav.Link
                 href="/profile"
@@ -245,7 +497,7 @@ function Home() {
         className="animated-text"
         style={{ marginLeft: "10%", marginTop: "2%" }}
       >
-        Hello, <span style={{ color: "red" }}>{name}</span>
+        Hello <span style={{ color: "red" }}>{name}</span>,
       </h1>
       <h1
         className="animated-text"
@@ -254,6 +506,296 @@ function Home() {
         {greeting}.
       </h1>
       <br />
+      <br />
+      <br />
+      <br />
+
+      <br />
+      <br />
+      <h1 style={{ marginLeft: "10%", marginTop: "2%" }}>
+        Your Bmi is <span style={{ color: "red" }}>{bmi}</span>,
+      </h1>
+      <h1 style={{ marginLeft: "15%", marginTop: "2%", fontSize: "30px" }}>
+        {bmiReport}.
+      </h1>
+      <h1
+        style={{
+          marginLeft: "15%",
+          marginTop: "2%",
+          fontSize: "30px",
+          whiteSpace: "pre-line",
+        }}
+      >
+        {currentSchedule}
+      </h1>
+      <br />
+      <br />
+      <div>
+        <Card className="mx-auto" style={{ width: "600px" }}>
+          <Card.Body>
+            <Form onSubmit={handleFormSubmit}>
+              <center>
+                <h1>Add Task</h1>
+              </center>
+              <br />
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalEmail"
+              >
+                <Form.Label column sm={4}>
+                  Workout Name:
+                </Form.Label>
+                <Col sm={8}>
+                  <Form.Control as="select" onChange={handleWorkoutNameChange}>
+                    <option>Open this select menu</option>
+                    <option value="Cardiovascular Workouts">
+                      Cardiovascular Workouts
+                    </option>
+                    <option value="Strength Training">Strength Training</option>
+                    <option value="Flexibility and Mobility">
+                      Flexibility and Mobility
+                    </option>
+                    <option value="4">
+                      High-Intensity Interval Training (HIIT)
+                    </option>
+                    <option value="Group Fitness Classes">
+                      Group Fitness Classes
+                    </option>
+                    <option value="Outdoor Activities">
+                      Outdoor Activities
+                    </option>
+                    <option value="Sports and Recreational Activities">
+                      Sports and Recreational Activities
+                    </option>
+                    <option value="Martial Arts and Combat Sports">
+                      Martial Arts and Combat Sports
+                    </option>
+                    <option value="Specialized Workouts">
+                      Specialized Workouts
+                    </option>
+                    <option value="Mind-Body Exercises">
+                      Mind-Body Exercises
+                    </option>
+                    <option value="Rehabilitation Exercises">
+                      Rehabilitation Exercises
+                    </option>
+                    <option value="Functional Training">
+                      Functional Training
+                    </option>
+                    <option value="Indoor and Home Workouts">
+                      Indoor and Home Workouts
+                    </option>
+                    <option value="Water-Based Workouts">
+                      Water-Based Workouts
+                    </option>
+                    <option value="Winter Sports">Winter Sports</option>
+                    <option value="Childhood Games and Activities">
+                      Childhood Games and Activities
+                    </option>
+                  </Form.Control>
+                </Col>
+                <Form.Control.Feedback type="invalid">
+                  Please choose a Workout name.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              {workoutType && (
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formHorizontalPassword"
+                >
+                  <Form.Label column sm={4}>
+                    Type of workout:
+                  </Form.Label>
+                  <Col sm={8}>
+                    <Form.Control
+                      as="select"
+                      onChange={handleWorkoutTypeChange}
+                      required
+                    >
+                      <option value="">Select a Type of Workout</option>
+                      {workoutTypeOptions[workoutType].map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </Col>
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a type of workout.
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
+
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalEmail"
+              >
+                <Form.Label column sm={4}>
+                  Date and Time:
+                </Form.Label>
+                <Col sm={8}>
+                  <Row>
+                    <Col xs={4}>
+                      <Form.Control
+                        onChange={handleDate}
+                        placeholder="City"
+                        type="date"
+                      />
+                    </Col>
+                    <Col xs={4}>
+                      <Form.Control
+                        onChange={handleFromTime}
+                        placeholder="State"
+                        type="time"
+                      />
+                    </Col>
+                    <Col xs={4}>
+                      <Form.Control
+                        onChange={handleToTime}
+                        placeholder="Zip"
+                        type="time"
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+                <Form.Control.Feedback type="invalid">
+                  Please choose a Date and Time.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={{ span: 8, offset: 4 }}>
+                  <Button type="submit" onClick={handleFormSubmit}>
+                    Submit
+                  </Button>
+                </Col>
+              </Form.Group>
+            </Form>
+          </Card.Body>
+        </Card>
+      </div>
+      <br />
+      <br />
+      <Container>
+        <h1>Records</h1>
+        <Row>
+          {data.map((record, index) => (
+            <Col key={index} xs={12} sm={6} md={4} lg={4}>
+              <Card style={{ margin: "10px" }}>
+                <Card.Body>
+                  <div>
+                    {index === cardToDeleteIndex ? (
+                      /* New Form */
+                      <div>
+                        <Form>
+                          <center>
+                            <Card.Title>Task {index + 1}</Card.Title>
+                          </center>
+                          <Card.Text>
+                            <span style={{ fontWeight: "bold" }}>
+                              Workout Type:
+                            </span>{" "}
+                            {record.workoutType}
+                          </Card.Text>
+                          <Card.Text>
+                            <span style={{ fontWeight: "bold" }}>
+                              Selected Workout Type:
+                            </span>{" "}
+                            {record.selectedWorkoutType}
+                          </Card.Text>
+                          <Card.Text>
+                            <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
+                            {record.date}
+                          </Card.Text>
+                          <Card.Text>
+                            <span style={{ fontWeight: "bold" }}>
+                              From Time:
+                            </span>{" "}
+                            {record.fromTime}
+                          </Card.Text>
+                          <Card.Text>
+                            <span style={{ fontWeight: "bold" }}>To Time:</span>{" "}
+                            {record.toTime}
+                          </Card.Text>
+                          <Form.Group
+                            as={Row}
+                            className="mb-3"
+                            controlId="formHorizontalEmail"
+                          >
+                            <Form.Label
+                              column
+                              sm={5}
+                              style={{ fontWeight: "bold" }}
+                            >
+                              Calories Burnt
+                            </Form.Label>
+                            <Col sm={5}>
+                              <Form.Control
+                                type="number"
+                                placeholder="Enter number of calories burnt"
+                                onChange={(e) => setCalories(e.target.value)}
+                              />
+                            </Col>
+                          </Form.Group>
+                          <center>
+                            <Button
+                              variant="success"
+                              onClick={() => updateCalories(index, record)}
+                            >
+                              Done
+                            </Button>
+                          </center>
+                        </Form>
+                      </div>
+                    ) : (
+                      /* Task Form */
+                      <div>
+                        <center>
+                          <Card.Title>Task {index + 1}</Card.Title>
+                        </center>
+                        <Card.Text>
+                          <span style={{ fontWeight: "bold" }}>
+                            Workout Type:
+                          </span>{" "}
+                          {record.workoutType}
+                        </Card.Text>
+                        <Card.Text>
+                          <span style={{ fontWeight: "bold" }}>
+                            Selected Workout Type:
+                          </span>{" "}
+                          {record.selectedWorkoutType}
+                        </Card.Text>
+                        <Card.Text>
+                          <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
+                          {record.date}
+                        </Card.Text>
+                        <Card.Text>
+                          <span style={{ fontWeight: "bold" }}>From Time:</span>{" "}
+                          {record.fromTime}
+                        </Card.Text>
+                        <Card.Text>
+                          <span style={{ fontWeight: "bold" }}>To Time:</span>{" "}
+                          {record.toTime}
+                        </Card.Text>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDelete(index)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
       <br />
       <br />
       <br />
@@ -383,27 +925,8 @@ function Home() {
         </Carousel>
       </div>
       <br />
+
       <br />
-      <h1 style={{ marginLeft: "10%", marginTop: "2%" }}>
-        Your Bmi is <span style={{ color: "red" }}>{bmi}</span>,
-      </h1>
-      <h1 style={{ marginLeft: "15%", marginTop: "2%", fontSize: "30px" }}>
-        {bmiReport}.
-      </h1>
-      <br />
-      <h1 style={{ marginLeft: "10%", marginTop: "2%" }}>
-        Present Your task is to
-      </h1>
-      <h1
-        style={{
-          marginLeft: "15%",
-          marginTop: "2%",
-          fontSize: "30px",
-          whiteSpace: "pre-line",
-        }}
-      >
-        {currentSchedule}
-      </h1>
     </div>
   );
 }

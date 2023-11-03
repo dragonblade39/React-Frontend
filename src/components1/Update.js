@@ -69,8 +69,8 @@ function Update() {
       };
     }
     console.log(updatedData);
-    // const url = "http://localhost:5500/signup/update"; // Update the URL
-    const url = "https://reactbackend-mhmh.onrender.com/signup/update";
+    const url = "http://localhost:5500/signup/update"; // Update the URL
+    // const url = "https://reactbackend-mhmh.onrender.com/signup/update";
     axios
       .post(url, updatedData)
       .then((res) => {
@@ -94,8 +94,8 @@ function Update() {
 
     if (shouldDelete) {
       // The user confirmed the deletion
-      // const url=`http://localhost:5500/signup/update/${username}`;
-      const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
+      const url = `http://localhost:5500/signup/update/${username}`;
+      // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
       axios
         .delete(url)
         .then((res) => {
@@ -169,8 +169,8 @@ function Update() {
   useEffect(() => {
     // Make an API request to fetch user data and set the state variables
     const obj = { username };
-    // const url = "http://localhost:5500/signup/profile";
-    const url = "https://reactbackend-mhmh.onrender.com/signup/profile";
+    const url = "http://localhost:5500/signup/profile";
+    // const url = "https://reactbackend-mhmh.onrender.com/signup/profile";
     axios
       .post(url, obj)
       .then((res) => {
