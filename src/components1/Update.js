@@ -94,8 +94,8 @@ function Update() {
 
     if (shouldDelete) {
       // The user confirmed the deletion
-      const url = `http://localhost:5500/signup/update/${username}`;
-      // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
+      // const url = `http://localhost:5500/signup/update/${username}`;
+      const url = `https://react-backend-cdll.onrender.com/signup/update/${username}`;
       axios
         .delete(url)
         .then((res) => {
@@ -115,7 +115,8 @@ function Update() {
       // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
       // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
       axios
-        .delete("http://localhost:5500/data/deleteTasks", {
+        // .delete("http://localhost:5500/data/deleteTasks", {
+          .delete("https://react-backend-cdll.onrender.com/data/deleteTasks",{
           data: {
             username: username,
           },
