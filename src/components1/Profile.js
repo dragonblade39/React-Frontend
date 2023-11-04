@@ -78,8 +78,8 @@ function Profile() {
   useEffect(() => {
     // Make an API request to fetch user data and set the state variables
     const obj = { username };
-    const url = "http://localhost:5500/signup/profile";
-    // const url = `https://reactbackend-mhmh.onrender.com/signup/profile`;
+    // const url = "http://localhost:5500/signup/profile";
+    const url = `https://react-backend-cdll.onrender.com/signup/profile`;
 
     axios
       .post(url, obj)

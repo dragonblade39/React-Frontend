@@ -133,11 +133,15 @@ function Update() {
         });
 
       axios
-        .delete("http://localhost:5500/history/deleteTasks1", {
-          data: {
-            username: username,
-          },
-        })
+        // .delete("http://localhost:5500/history/deleteTasks1", {
+        .delete(
+          "https://react-backend-cdll.onrender.com/history/deleteTasks1",
+          {
+            data: {
+              username: username,
+            },
+          }
+        )
         .then((res) => {
           if (res.status === 200) {
           } else if (res.status === 404) {
@@ -207,8 +211,8 @@ function Update() {
   useEffect(() => {
     // Make an API request to fetch user data and set the state variables
     const obj = { username };
-    const url = "http://localhost:5500/signup/profile";
-    // const url = "https://reactbackend-mhmh.onrender.com/signup/profile";
+    // const url = "http://localhost:5500/signup/profile";
+    const url = "https://react-backend-cdll.onrender.com/signup/profile";
     axios
       .post(url, obj)
       .then((res) => {

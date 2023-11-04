@@ -38,8 +38,8 @@ function SignUp() {
       bmi,
     };
     console.log(obj);
-    const url = "http://localhost:5500/signup/create-fitness";
-    // const url = "https://reactbackend-mhmh.onrender.com/signup/create-fitness";
+    // const url = "http://localhost:5500/signup/create-fitness";
+    const url = "https://react-backend-cdll.onrender.com/signup/create-fitness";
     axios
       .post(url, obj)
       .then((res) => {

@@ -16,8 +16,9 @@ function ForgotPassword() {
 
   let handleSubmit = (event) => {
     const obj = { name, username, password };
-    const url = "http://localhost:5500/signup/forgot-password";
-    // const url = "https://reactbackend-mhmh.onrender.com/signup/forgot-password";
+    // const url = "http://localhost:5500/signup/forgot-password";
+    const url =
+      "https://react-backend-cdll.onrender.com/signup/forgot-password";
     axios
       .post(url, obj)
       .then((res) => {

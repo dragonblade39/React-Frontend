@@ -72,8 +72,8 @@ function Home() {
 
   useEffect(() => {
     const obj = { username };
-    const url = "http://localhost:5500/signup/homepage";
-    // const url = "https://reactbackend-mhmh.onrender.com/signup/homepage";
+    // const url = "http://localhost:5500/signup/homepage";
+    const url = "https://react-backend-cdll.onrender.com/signup/homepage";
     axios
       .post(url, obj)
       .then((res) => {
@@ -366,7 +366,8 @@ function Home() {
       return;
     }
 
-    const url = "http://localhost:5500/data/createTask";
+    // const url = "http://localhost:5500/data/createTask";
+    const url = "https://react-backend-cdll.onrender.com/data/createTask";
     axios
       .post(url, obj)
       .then((res) => {
@@ -388,8 +389,11 @@ function Home() {
     // Fetch user history data from your backend
     const fetchData = async () => {
       try {
+        // const response = await axios.get(
+        //   `http://localhost:5500/data?username=${username}`
+        // );
         const response = await axios.get(
-          `http://localhost:5500/data?username=${username}`
+          `https://react-backend-cdll.onrender.com/data?username=${username}`
         );
         setData(response.data);
         console.log(response.data);
@@ -415,8 +419,11 @@ function Home() {
     // Fetch user history data from your backend
     const fetchData = async () => {
       try {
+        // const response = await axios.get(
+        //   `http://localhost:5500/history/totalCalories?username=${username}`
+        // );
         const response = await axios.get(
-          `http://localhost:5500/history/totalCalories?username=${username}`
+          `https://react-backend-cdll.onrender.com/history/totalCalories?username=${username}`
         );
         const totalCalories = response.data.totalCalories; // Assuming the total calories are in the 'totalCalories' field of the response
         setTotalCalories(totalCalories);
@@ -466,7 +473,8 @@ function Home() {
       totalCalories: tt,
     };
     console.log(record);
-    const url = "http://localhost:5500/history/create";
+    // const url = "http://localhost:5500/history/create";
+    const url = "https://react-backend-cdll.onrender.com/history/create";
     axios
       .post(url, obj)
       .then((res) => {
@@ -483,10 +491,11 @@ function Home() {
           alert(err.message);
         }
       });
-    const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
+    // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
     // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
     axios
-      .delete("http://localhost:5500/data/deleteTask", {
+      // .delete("http://localhost:5500/data/deleteTask", {
+      .delete("https://react-backend-cdll.onrender.com/data/deleteTask", {
         data: {
           username: username,
           selectedWorkoutType: record.selectedWorkoutType,
@@ -515,11 +524,12 @@ function Home() {
       fromTime: record.fromTime,
       toTime: record.toTime,
     };
-    const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
+    //const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
     // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
     console.log(record);
     axios
-      .delete("http://localhost:5500/data/deleteTask", {
+      // .delete("http://localhost:5500/data/deleteTask", {
+      .delete("https://react-backend-cdll.onrender.com/data/deleteTask", {
         data: {
           username: username,
           selectedWorkoutType: record.selectedWorkoutType,
