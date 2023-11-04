@@ -1,7 +1,145 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import bg from "../images/bgafterlogin.jpg";
+import logo from "../images/logo.png";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "../styles/Home.module.css";
+import Carousel from "react-bootstrap/Carousel";
+import Button from "react-bootstrap/esm/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import { Card, CardColumns } from "react-bootstrap";
 
 function TasksHistory() {
-  return <div></div>;
+  const [workoutType, setWorkoutType] = useState("");
+  const [selectedWorkoutType, setSelectedWorkoutType] = useState("");
+  const [date, setDate] = useState("");
+  const [fromTime, setFromTime] = useState("");
+  const [toTime, setToTime] = useState("");
+  const [data, setData] = useState([]);
+  const [displayNewForm, setDisplayNewForm] = useState(false);
+  const [cardToDeleteIndex, setCardToDeleteIndex] = useState(-1);
+  const [calories, setCalories] = useState("");
+  const [totalCalories, setTotalCalories] = useState("");
+
+  const location = useLocation();
+  let username = location.state ? location.state.username : null;
+  const [name, setName] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [greeting, setGreeting] = useState("");
+  const [bmi, setBmi] = useState();
+  const [bmiReport, setBmiReport] = useState("");
+  const [currentSchedule, setCurrentSchedule] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (username === null) {
+      navigate("/");
+    }
+  }, [username]);
+
+  useEffect(() => {
+    // Fetch user history data from your backend
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5500/history?username=${username}`
+        );
+        setData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching history data:", error);
+      }
+    };
+
+    if (username) {
+      fetchData();
+    }
+  }, [username]);
+
+  const backgroundStyle = {
+    backgroundRepeat: "no-repeat",
+    background: `url(${bg})`,
+    backgroundSize: "100%",
+    backgroundPosition: "center",
+    minHeight: "100vh",
+    position: "relative",
+  };
+
+  return (
+    <div style={backgroundStyle}>
+      <br />
+      <center>
+        <h1>
+          <span style={{ fontWeight: "bold" }}>Username: </span>
+          <span style={{ color: "red" }}>{username}</span>
+        </h1>
+      </center>
+      <br />
+      <Container>
+        {data.length === 0 ? (
+          <h1>No Tasks found</h1>
+        ) : (
+          <Row>
+            <h1>Tasks</h1>
+            {data.map((record, index) => (
+              <Col key={index} xs={12} sm={6} md={4} lg={4}>
+                <Card style={{ margin: "10px" }}>
+                  <Card.Body>
+                    <div>
+                      <center>
+                        <Card.Title>Task {index + 1}</Card.Title>
+                      </center>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>
+                          Workout Type:
+                        </span>{" "}
+                        {record.workoutType}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>
+                          Selected Workout Type:
+                        </span>{" "}
+                        {record.selectedWorkoutType}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
+                        {record.date.slice(0, 10)}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>From Time:</span>{" "}
+                        {record.fromTime}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>To Time:</span>{" "}
+                        {record.toTime}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>Calories:</span>{" "}
+                        {record.calories}
+                      </Card.Text>
+                      <Card.Text>
+                        <span style={{ fontWeight: "bold" }}>
+                          Total Calories:
+                        </span>{" "}
+                        {record.totalCalories}
+                      </Card.Text>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
+      </Container>
+    </div>
+  );
 }
 
 export default TasksHistory;

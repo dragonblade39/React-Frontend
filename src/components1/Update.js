@@ -111,6 +111,44 @@ function Update() {
         .catch((err) => {
           alert("An error occurred while deleting the user: " + err.message);
         });
+
+      // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
+      // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
+      axios
+        .delete("http://localhost:5500/data/deleteTasks", {
+          data: {
+            username: username,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+          } else if (res.status === 404) {
+            alert("Task not found");
+          } else {
+            alert("Failed to delete Task");
+          }
+        })
+        .catch((err) => {
+          alert("An error occurred while deleting the user: " + err.message);
+        });
+
+      axios
+        .delete("http://localhost:5500/history/deleteTasks1", {
+          data: {
+            username: username,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+          } else if (res.status === 404) {
+            alert("Task not found");
+          } else {
+            alert("Failed to delete Task");
+          }
+        })
+        .catch((err) => {
+          alert("An error occurred while deleting the user: " + err.message);
+        });
     } else {
       // The user canceled the deletion
       // You can add any rollback logic here if needed

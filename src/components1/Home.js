@@ -13,6 +13,7 @@ import Button from "react-bootstrap/esm/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import InputGroup from "react-bootstrap/InputGroup";
 import { Card, CardColumns } from "react-bootstrap";
 
 function Home() {
@@ -26,6 +27,8 @@ function Home() {
   const [cardToDeleteIndex, setCardToDeleteIndex] = useState(-1);
   const [calories, setCalories] = useState("");
   const [totalCalories, setTotalCalories] = useState("");
+  const [cardToDeleteIndex1, setCardToDeleteIndex1] = useState(null);
+  const [selectedValue, setSelectedValue] = useState("");
 
   const location = useLocation();
   let username = location.state ? location.state.username : null;
@@ -331,12 +334,45 @@ function Home() {
       fromTime,
       toTime,
     };
+
+    // Perform form validation
+    if (!obj.username || obj.username.trim() === "") {
+      alert("Username is required");
+      return;
+    }
+
+    if (!obj.workoutType || obj.workoutType.trim() === "") {
+      alert("Workout Type is required");
+      return;
+    }
+
+    if (!obj.selectedWorkoutType || obj.selectedWorkoutType.trim() === "") {
+      alert("Selected Workout Type is required");
+      return;
+    }
+
+    if (!obj.date) {
+      alert("Date is required");
+      return;
+    }
+
+    if (!obj.fromTime) {
+      alert("From Time is required");
+      return;
+    }
+
+    if (!obj.toTime) {
+      alert("To Time is required");
+      return;
+    }
+
     const url = "http://localhost:5500/data/createTask";
     axios
       .post(url, obj)
       .then((res) => {
         if (res.status === 200) {
           console.log(obj);
+          window.location.reload();
         }
       })
       .catch((err) => {
@@ -346,9 +382,6 @@ function Home() {
           alert(err.message);
         }
       });
-    event.preventDefault();
-
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -396,6 +429,25 @@ function Home() {
     fetchData();
   }, [username]);
 
+  const cardColors = {
+    value1: "Primary",
+    value2: "Secondary",
+    value3: "Danger",
+    value4: "Warning",
+    value5: "Info",
+    value6: "Light",
+    value7: "Dark",
+    value8: "Success",
+    value9: "Primary",
+    value10: "Secondary",
+    value11: "Danger",
+    value12: "Warning",
+    value13: "Info",
+    value14: "Light",
+    value15: "Success",
+    value16: "Success",
+  };
+
   const updateCalories = (index, record) => {
     const cal = Number(calories);
     let cal1 = Number(totalCalories);
@@ -431,6 +483,59 @@ function Home() {
           alert(err.message);
         }
       });
+    const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
+    // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
+    axios
+      .delete("http://localhost:5500/data/deleteTask", {
+        data: {
+          username: username,
+          selectedWorkoutType: record.selectedWorkoutType,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+        } else if (res.status === 404) {
+          alert("Task not found");
+        } else {
+          alert("Failed to delete Task");
+        }
+      })
+      .catch((err) => {
+        alert("An error occurred while deleting the user: " + err.message);
+      });
+    window.location.reload();
+  };
+
+  const handleDelete1 = (index, record) => {
+    const obj = {
+      username,
+      workoutType: record.workoutType,
+      selectedWorkoutType: record.selectedWorkoutType,
+      date: record.date,
+      fromTime: record.fromTime,
+      toTime: record.toTime,
+    };
+    const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
+    // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
+    console.log(record);
+    axios
+      .delete("http://localhost:5500/data/deleteTask", {
+        data: {
+          username: username,
+          selectedWorkoutType: record.selectedWorkoutType,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+        } else if (res.status === 404) {
+          alert("Task not found");
+        } else {
+          alert("Failed to delete Task");
+        }
+      })
+      .catch((err) => {
+        alert("An error occurred while deleting the user: " + err.message);
+      });
     window.location.reload();
   };
 
@@ -439,7 +544,7 @@ function Home() {
       <div style={overlayStyle}></div>
       <Navbar style={navbarStyle}>
         <Container>
-          <Navbar.Brand href="sign-up" className="mx-auto" style={bold}>
+          <Navbar.Brand href="" className="mx-auto" style={bold}>
             <img
               alt=""
               src={logo}
@@ -464,7 +569,7 @@ function Home() {
               <Nav.Link
                 style={bold1}
                 as={Link}
-                to="/dashboard"
+                to="/taskshistory"
                 state={{ username }}
               >
                 Tasks History
@@ -507,8 +612,10 @@ function Home() {
       </h1>
       <br />
       <br />
-      <br />
-      <br />
+      <h1 style={{ marginLeft: "10%", marginTop: "2%" }}>
+        Total Calories Burnt{" "}
+        <span style={{ color: "red" }}>{totalCalories}</span>
+      </h1>
 
       <br />
       <br />
@@ -533,165 +640,250 @@ function Home() {
       <div>
         <Card className="mx-auto" style={{ width: "600px" }}>
           <Card.Body>
-            <Form onSubmit={handleFormSubmit}>
-              <center>
-                <h1>Add Task</h1>
-              </center>
-              <br />
-              <Form.Group
-                as={Row}
-                className="mb-3"
-                controlId="formHorizontalEmail"
-              >
-                <Form.Label column sm={4}>
-                  Workout Name:
-                </Form.Label>
-                <Col sm={8}>
-                  <Form.Control as="select" onChange={handleWorkoutNameChange}>
-                    <option>Open this select menu</option>
-                    <option value="Cardiovascular Workouts">
-                      Cardiovascular Workouts
-                    </option>
-                    <option value="Strength Training">Strength Training</option>
-                    <option value="Flexibility and Mobility">
-                      Flexibility and Mobility
-                    </option>
-                    <option value="4">
-                      High-Intensity Interval Training (HIIT)
-                    </option>
-                    <option value="Group Fitness Classes">
-                      Group Fitness Classes
-                    </option>
-                    <option value="Outdoor Activities">
-                      Outdoor Activities
-                    </option>
-                    <option value="Sports and Recreational Activities">
-                      Sports and Recreational Activities
-                    </option>
-                    <option value="Martial Arts and Combat Sports">
-                      Martial Arts and Combat Sports
-                    </option>
-                    <option value="Specialized Workouts">
-                      Specialized Workouts
-                    </option>
-                    <option value="Mind-Body Exercises">
-                      Mind-Body Exercises
-                    </option>
-                    <option value="Rehabilitation Exercises">
-                      Rehabilitation Exercises
-                    </option>
-                    <option value="Functional Training">
-                      Functional Training
-                    </option>
-                    <option value="Indoor and Home Workouts">
-                      Indoor and Home Workouts
-                    </option>
-                    <option value="Water-Based Workouts">
-                      Water-Based Workouts
-                    </option>
-                    <option value="Winter Sports">Winter Sports</option>
-                    <option value="Childhood Games and Activities">
-                      Childhood Games and Activities
-                    </option>
-                  </Form.Control>
-                </Col>
-                <Form.Control.Feedback type="invalid">
-                  Please choose a Workout name.
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              {workoutType && (
+            <InputGroup hasValidation>
+              <Form onSubmit={handleFormSubmit}>
+                <center>
+                  <h1>Add Task</h1>
+                </center>
+                <br />
                 <Form.Group
                   as={Row}
                   className="mb-3"
-                  controlId="formHorizontalPassword"
+                  controlId="formHorizontalEmail"
                 >
                   <Form.Label column sm={4}>
-                    Type of workout:
+                    Workout Name:
                   </Form.Label>
                   <Col sm={8}>
                     <Form.Control
                       as="select"
-                      onChange={handleWorkoutTypeChange}
+                      onChange={handleWorkoutNameChange}
                       required
+                      isInvalid
                     >
-                      <option value="">Select a Type of Workout</option>
-                      {workoutTypeOptions[workoutType].map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
+                      <option>Open this select menu</option>
+                      <option value="Cardiovascular Workouts">
+                        Cardiovascular Workouts
+                      </option>
+                      <option value="Strength Training">
+                        Strength Training
+                      </option>
+                      <option value="Flexibility and Mobility">
+                        Flexibility and Mobility
+                      </option>
+                      <option value="4">
+                        High-Intensity Interval Training (HIIT)
+                      </option>
+                      <option value="Group Fitness Classes">
+                        Group Fitness Classes
+                      </option>
+                      <option value="Outdoor Activities">
+                        Outdoor Activities
+                      </option>
+                      <option value="Sports and Recreational Activities">
+                        Sports and Recreational Activities
+                      </option>
+                      <option value="Martial Arts and Combat Sports">
+                        Martial Arts and Combat Sports
+                      </option>
+                      <option value="Specialized Workouts">
+                        Specialized Workouts
+                      </option>
+                      <option value="Mind-Body Exercises">
+                        Mind-Body Exercises
+                      </option>
+                      <option value="Rehabilitation Exercises">
+                        Rehabilitation Exercises
+                      </option>
+                      <option value="Functional Training">
+                        Functional Training
+                      </option>
+                      <option value="Indoor and Home Workouts">
+                        Indoor and Home Workouts
+                      </option>
+                      <option value="Water-Based Workouts">
+                        Water-Based Workouts
+                      </option>
+                      <option value="Winter Sports">Winter Sports</option>
+                      <option value="Childhood Games and Activities">
+                        Childhood Games and Activities
+                      </option>
                     </Form.Control>
                   </Col>
                   <Form.Control.Feedback type="invalid">
-                    Please choose a type of workout.
+                    Please choose a Workout name.
                   </Form.Control.Feedback>
                 </Form.Group>
-              )}
 
-              <Form.Group
-                as={Row}
-                className="mb-3"
-                controlId="formHorizontalEmail"
-              >
-                <Form.Label column sm={4}>
-                  Date and Time:
-                </Form.Label>
-                <Col sm={8}>
-                  <Row>
-                    <Col xs={4}>
+                {workoutType && (
+                  <Form.Group
+                    as={Row}
+                    className="mb-3"
+                    controlId="formHorizontalPassword"
+                  >
+                    <Form.Label column sm={4}>
+                      Type of workout:
+                    </Form.Label>
+                    <Col sm={8}>
                       <Form.Control
-                        onChange={handleDate}
-                        placeholder="City"
-                        type="date"
-                      />
+                        as="select"
+                        onChange={handleWorkoutTypeChange}
+                        required
+                        isInvalid
+                      >
+                        <option value="">Select a Type of Workout</option>
+                        {workoutTypeOptions[workoutType].map(
+                          (option, index) => (
+                            <option key={index} value={option}>
+                              {option}
+                            </option>
+                          )
+                        )}
+                      </Form.Control>
                     </Col>
-                    <Col xs={4}>
-                      <Form.Control
-                        onChange={handleFromTime}
-                        placeholder="State"
-                        type="time"
-                      />
-                    </Col>
-                    <Col xs={4}>
-                      <Form.Control
-                        onChange={handleToTime}
-                        placeholder="Zip"
-                        type="time"
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-                <Form.Control.Feedback type="invalid">
-                  Please choose a Date and Time.
-                </Form.Control.Feedback>
-              </Form.Group>
+                    <Form.Control.Feedback type="invalid">
+                      Please choose a type of workout.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                )}
 
-              <Form.Group as={Row} className="mb-3">
-                <Col sm={{ span: 8, offset: 4 }}>
-                  <Button type="submit" onClick={handleFormSubmit}>
-                    Submit
-                  </Button>
-                </Col>
-              </Form.Group>
-            </Form>
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="formHorizontalEmail"
+                >
+                  <Form.Label column sm={4}>
+                    Date and Time:
+                  </Form.Label>
+                  <Col sm={8}>
+                    <Row>
+                      <Col xs={4}>
+                        <Form.Control
+                          onChange={handleDate}
+                          type="date"
+                          required
+                          isInvalid
+                        />
+                      </Col>
+                      <Col xs={4}>
+                        <Form.Control
+                          onChange={handleFromTime}
+                          type="time" // Change type to text
+                          required
+                          isInvalid
+                        />
+                      </Col>
+                      <Col xs={4}>
+                        <Form.Control
+                          onChange={handleToTime}
+                          type="time" // Change type to text
+                          required
+                          isInvalid
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a Date and Time.
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                  <Col sm={{ span: 8, offset: 4 }}>
+                    <Button type="submit" onClick={handleFormSubmit}>
+                      Submit
+                    </Button>
+                  </Col>
+                </Form.Group>
+              </Form>
+            </InputGroup>
           </Card.Body>
         </Card>
       </div>
       <br />
       <br />
       <Container>
-        <h1>Records</h1>
-        <Row>
-          {data.map((record, index) => (
-            <Col key={index} xs={12} sm={6} md={4} lg={4}>
-              <Card style={{ margin: "10px" }}>
-                <Card.Body>
-                  <div>
-                    {index === cardToDeleteIndex ? (
-                      /* New Form */
-                      <div>
-                        <Form>
+        {data.length === 0 ? (
+          <h1>No Tasks added</h1>
+        ) : (
+          <Row>
+            <h1>Tasks</h1>
+            {data.map((record, index) => (
+              <Col key={index} xs={12} sm={6} md={4} lg={4}>
+                <Card
+                  className={cardColors[selectedValue]}
+                  style={{ margin: "10px" }}
+                >
+                  <Card.Body>
+                    <div>
+                      {index === cardToDeleteIndex ? (
+                        /* New Form */
+                        <div>
+                          <Form>
+                            <center>
+                              <Card.Title>Task {index + 1}</Card.Title>
+                            </center>
+                            <Card.Text>
+                              <span style={{ fontWeight: "bold" }}>
+                                Workout Type:
+                              </span>{" "}
+                              {record.workoutType}
+                            </Card.Text>
+                            <Card.Text>
+                              <span style={{ fontWeight: "bold" }}>
+                                Selected Workout Type:
+                              </span>{" "}
+                              {record.selectedWorkoutType}
+                            </Card.Text>
+                            <Card.Text>
+                              <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
+                              {record.date}
+                            </Card.Text>
+                            <Card.Text>
+                              <span style={{ fontWeight: "bold" }}>
+                                From Time:
+                              </span>{" "}
+                              {record.fromTime}
+                            </Card.Text>
+                            <Card.Text>
+                              <span style={{ fontWeight: "bold" }}>
+                                To Time:
+                              </span>{" "}
+                              {record.toTime}
+                            </Card.Text>
+                            <Form.Group
+                              as={Row}
+                              className="mb-3"
+                              controlId="formHorizontalEmail"
+                            >
+                              <Form.Label
+                                column
+                                sm={5}
+                                style={{ fontWeight: "bold" }}
+                              >
+                                Calories Burnt
+                              </Form.Label>
+                              <Col sm={5}>
+                                <Form.Control
+                                  type="number"
+                                  placeholder="Enter number of calories burnt"
+                                  onChange={(e) => setCalories(e.target.value)}
+                                />
+                              </Col>
+                            </Form.Group>
+                            <center>
+                              <Button
+                                variant="success"
+                                onClick={() => updateCalories(index, record)}
+                              >
+                                Done
+                              </Button>
+                            </center>
+                          </Form>
+                        </div>
+                      ) : (
+                        /* Task Form */
+                        <div>
                           <center>
                             <Card.Title>Task {index + 1}</Card.Title>
                           </center>
@@ -709,7 +901,7 @@ function Home() {
                           </Card.Text>
                           <Card.Text>
                             <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
-                            {record.date}
+                            {record.date.slice(0, 10)}
                           </Card.Text>
                           <Card.Text>
                             <span style={{ fontWeight: "bold" }}>
@@ -721,80 +913,32 @@ function Home() {
                             <span style={{ fontWeight: "bold" }}>To Time:</span>{" "}
                             {record.toTime}
                           </Card.Text>
-                          <Form.Group
-                            as={Row}
-                            className="mb-3"
-                            controlId="formHorizontalEmail"
+                          <Button
+                            variant="success"
+                            onClick={() => handleDelete(index)}
+                            style={{ marginLeft: "90px" }}
                           >
-                            <Form.Label
-                              column
-                              sm={5}
-                              style={{ fontWeight: "bold" }}
-                            >
-                              Calories Burnt
-                            </Form.Label>
-                            <Col sm={5}>
-                              <Form.Control
-                                type="number"
-                                placeholder="Enter number of calories burnt"
-                                onChange={(e) => setCalories(e.target.value)}
-                              />
-                            </Col>
-                          </Form.Group>
-                          <center>
-                            <Button
-                              variant="success"
-                              onClick={() => updateCalories(index, record)}
-                            >
-                              Done
-                            </Button>
-                          </center>
-                        </Form>
-                      </div>
-                    ) : (
-                      /* Task Form */
-                      <div>
-                        <center>
-                          <Card.Title>Task {index + 1}</Card.Title>
-                        </center>
-                        <Card.Text>
-                          <span style={{ fontWeight: "bold" }}>
-                            Workout Type:
-                          </span>{" "}
-                          {record.workoutType}
-                        </Card.Text>
-                        <Card.Text>
-                          <span style={{ fontWeight: "bold" }}>
-                            Selected Workout Type:
-                          </span>{" "}
-                          {record.selectedWorkoutType}
-                        </Card.Text>
-                        <Card.Text>
-                          <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
-                          {record.date}
-                        </Card.Text>
-                        <Card.Text>
-                          <span style={{ fontWeight: "bold" }}>From Time:</span>{" "}
-                          {record.fromTime}
-                        </Card.Text>
-                        <Card.Text>
-                          <span style={{ fontWeight: "bold" }}>To Time:</span>{" "}
-                          {record.toTime}
-                        </Card.Text>
-                        <Button
-                          variant="danger"
-                          onClick={() => handleDelete(index)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+                            Done
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDelete1(index, record)}
+                            className="ms-5"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </Card.Body>
+                </Card>
+                {index < data.length - 1 && (
+                  <hr style={{ margin: "10px 0", borderColor: "lightgray" }} />
+                )}
+              </Col>
+            ))}
+          </Row>
+        )}
       </Container>
       <br />
       <br />

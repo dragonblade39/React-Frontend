@@ -7,6 +7,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import Home from "./components1/Home";
 import Profile from "./components1/Profile";
 import Update from "./components1/Update";
+import TasksHistory from "./components1/TasksHistory";
 function App() {
   return (
     <Box>
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/update" element={<Update />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="*" element={<SignUp />} />
+          <Route exact path="/taskshistory" element={<TasksHistory />} />
         </Routes>
       </Box>
     </Box>
