@@ -69,8 +69,8 @@ function Update() {
       };
     }
     console.log(updatedData);
-    const url = "http://localhost:5500/signup/update"; // Update the URL
-    // const url = "https://reactbackend-mhmh.onrender.com/signup/update";
+    // const url = "http://localhost:5500/signup/update"; // Update the URL
+    const url = "https://reactbackend-mhmh.onrender.com/signup/update";
     axios
       .post(url, updatedData)
       .then((res) => {
@@ -116,7 +116,7 @@ function Update() {
       // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
       axios
         // .delete("http://localhost:5500/data/deleteTasks", {
-          .delete("https://react-backend-cdll.onrender.com/data/deleteTasks",{
+        .delete("https://react-backend-cdll.onrender.com/data/deleteTasks", {
           data: {
             username: username,
           },
