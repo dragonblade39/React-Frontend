@@ -79,8 +79,9 @@ function Home() {
 
   useEffect(() => {
     const obj = { username };
-    const url = "http://localhost:5500/signup/homepage";
-    // const url = "https://react-backend-cdll.onrender.com/signup/homepage";
+    // const url = "http://localhost:5500/signup/homepage";
+    const url =
+      "https://react-backend-production-62ec.up.railway.app/signup/homepage";
     axios
       .post(url, obj)
       .then((res) => {
@@ -373,9 +374,10 @@ function Home() {
       return;
     }
 
-    const url = "http://localhost:5500/data/createTask";
-    // const url = "https://react-backend-cdll.onrender.com/data/createTask";
-    axios
+    // const url = "http://localhost:5500/data/createTask";
+    const url =
+      "https://react-backend-production-62ec.up.railway.app/data/createTask";
+    await axios
       .post(url, obj)
       .then((res) => {
         if (res.status === 200) {
@@ -396,12 +398,12 @@ function Home() {
     // Fetch user history data from your backend
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5500/data?username=${username}`
-        );
         // const response = await axios.get(
-        //   `https://react-backend-cdll.onrender.com/data?username=${username}`
+        //   `http://localhost:5500/data?username=${username}`
         // );
+        const response = await axios.get(
+          `https://react-backend-production-62ec.up.railway.app/data?username=${username}`
+        );
         setData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -426,12 +428,12 @@ function Home() {
     // Fetch user history data from your backend
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5500/history/totalCalories?username=${username}`
-        );
         // const response = await axios.get(
-        //   `https://react-backend-cdll.onrender.com/history/totalCalories?username=${username}`
+        //   `http://localhost:5500/history/totalCalories?username=${username}`
         // );
+        const response = await axios.get(
+          `https://react-backend-production-62ec.up.railway.app/history/totalCalories?username=${username}`
+        );
         const totalCalories = response.data.totalCalories; // Assuming the total calories are in the 'totalCalories' field of the response
         setTotalCalories(totalCalories);
         console.log("Hello" + totalCalories);
@@ -462,7 +464,7 @@ function Home() {
     value16: "Success",
   };
 
-  const updateCalories = (index, record) => {
+  const updateCalories = async (index, record) => {
     const cal = Number(calories);
     let cal1 = Number(totalCalories);
     cal1 = setTotalCalories(cal + cal1);
@@ -480,49 +482,56 @@ function Home() {
       totalCalories: tt,
     };
     console.log(record);
-    const url = "http://localhost:5500/history/create";
-    // const url = "https://react-backend-cdll.onrender.com/history/create";
-    axios
-      .post(url, obj)
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(obj);
-          // Optionally, you can reset the calories state after a successful submission
-          setCalories("");
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 400) {
-          alert(err.response.data);
-        } else {
-          alert(err.message);
-        }
-      });
+    // const url = "http://localhost:5500/history/create";
+    const url =
+      "https://react-backend-production-62ec.up.railway.app/history/create";
+
+    try {
+      const response = axios.post(url, obj);
+
+      if (response.status === 200) {
+        console.log(obj);
+        // Optionally, you can reset the calories state after a successful submission
+        setCalories("");
+        window.location.reload();
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        alert(err.response.data);
+      } else {
+        alert(err.message);
+      }
+    }
+
     // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
     // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
-    axios
-      .delete("http://localhost:5500/data/deleteTask", {
-        // .delete("https://react-backend-cdll.onrender.com/data/deleteTask", {
-        data: {
-          username: username,
-          selectedWorkoutType: record.selectedWorkoutType,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-        } else if (res.status === 404) {
-          alert("Task not found");
-        } else {
-          alert("Failed to delete Task");
+    try {
+      const deleteResponse = await axios.delete(
+        "https://react-backend-production-62ec.up.railway.app/data/deleteTask",
+        {
+          data: {
+            username: username,
+            selectedWorkoutType: record.selectedWorkoutType,
+          },
         }
-      })
-      .catch((err) => {
-        alert("An error occurred while deleting the user: " + err.message);
-      });
+      );
+
+      if (deleteResponse.status === 200) {
+        window.location.reload();
+        // Handle success
+      } else if (deleteResponse.status === 404) {
+        alert("Task not found");
+      } else {
+        alert("Failed to delete Task");
+      }
+    } catch (err) {
+      alert("An error occurred while deleting the user: " + err.message);
+    }
+
     window.location.reload();
   };
 
-  const handleDelete1 = (index, record) => {
+  const handleDelete1 = async (index, record) => {
     const obj = {
       username,
       workoutType: record.workoutType,
@@ -531,28 +540,32 @@ function Home() {
       fromTime: record.fromTime,
       toTime: record.toTime,
     };
-    //const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
+    // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
     // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
     console.log(record);
-    axios
-      .delete("http://localhost:5500/data/deleteTask", {
-        // .delete("https://react-backend-cdll.onrender.com/data/deleteTask", {
-        data: {
-          username: username,
-          selectedWorkoutType: record.selectedWorkoutType,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-        } else if (res.status === 404) {
-          alert("Task not found");
-        } else {
-          alert("Failed to delete Task");
+
+    try {
+      const response = await axios.delete(
+        "https://react-backend-production-62ec.up.railway.app/data/deleteTask",
+        {
+          data: {
+            username: username,
+            selectedWorkoutType: record.selectedWorkoutType,
+          },
         }
-      })
-      .catch((err) => {
-        alert("An error occurred while deleting the user: " + err.message);
-      });
+      );
+
+      if (response.status === 200) {
+        // Handle success if needed
+      } else if (response.status === 404) {
+        alert("Task not found");
+      } else {
+        alert("Failed to delete Task");
+      }
+    } catch (err) {
+      alert("An error occurred while deleting the user: " + err.message);
+    }
+
     window.location.reload();
   };
 
@@ -561,7 +574,12 @@ function Home() {
     setEditingIndex(index);
     setEditedRecord({ ...record });
     axios
-      .post(`http://localhost:5500/data/updateTask/`, editedRecord)
+      // .post(`http://localhost:5500/data/updateTask/`, editedRecord)
+      .post(
+        `https://react-backend-production-62ec.up.railway.app/data/updateTask/`,
+        editedRecord
+      )
+
       .then((response) => {
         window.location.reload();
       })

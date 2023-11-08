@@ -48,12 +48,12 @@ function TasksHistory() {
     // Fetch user history data from your backend
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5500/history?username=${username}`
-        );
         // const response = await axios.get(
-        //   `https://react-backend-cdll.onrender.com/history?username=${username}`
+        //   `http://localhost:5500/history?username=${username}`
         // );
+        const response = await axios.get(
+          `https://react-backend-production-62ec.up.railway.app/history?username=${username}`
+        );
         setData(response.data);
         console.log(response.data);
       } catch (error) {
