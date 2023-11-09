@@ -28,6 +28,7 @@ function Home() {
   const [cardToDeleteIndex, setCardToDeleteIndex] = useState(-1);
   const [cardToEditIndex, setCardToEditIndex] = useState(-1);
   const [calories, setCalories] = useState("");
+  let [calories1, setCalories1] = useState("");
   const [totalCalories, setTotalCalories] = useState("");
   const [cardToDeleteIndex1, setCardToDeleteIndex1] = useState(null);
   const [selectedValue, setSelectedValue] = useState("");
@@ -36,6 +37,7 @@ function Home() {
   const [editedRecord, setEditedRecord] = useState({
     /* Initialize with default values */
   });
+  const [isCardEditing, setIsCardEditing] = useState(false);
 
   const location = useLocation();
   let username = location.state ? location.state.username : null;
@@ -465,42 +467,59 @@ function Home() {
   };
 
   const updateCalories = async (index, record) => {
-    const cal = Number(calories);
-    let cal1 = Number(totalCalories);
-    cal1 = setTotalCalories(cal + cal1);
-    const tt = Number(totalCalories) + Number(calories);
-    setTotalCalories(tt);
-    console.log("Calories:" + totalCalories);
-    const obj = {
-      username,
-      workoutType: record.workoutType,
-      selectedWorkoutType: record.selectedWorkoutType,
-      date: record.date,
-      fromTime: record.fromTime,
-      toTime: record.toTime,
-      calories, // Include the calories value here
-      totalCalories: tt,
-    };
-    console.log(record);
-    // const url = "http://localhost:5500/history/create";
-    const url =
-      "https://react-backend-production-62ec.up.railway.app/history/create";
+    const weight1 = Number(weight);
+    const caloriesValue = Number(calories1);
 
-    try {
-      const response = axios.post(url, obj);
+    if (!isNaN(weight) && !isNaN(caloriesValue)) {
+      // Calculate calories1 with the given formula
+      const updatedCalories1 = ((8 * 3.5 * weight) / 200) * caloriesValue;
 
-      if (response.status === 200) {
-        console.log(obj);
-        // Optionally, you can reset the calories state after a successful submission
-        setCalories("");
-        window.location.reload();
-      }
-    } catch (err) {
-      if (err.response && err.response.status === 400) {
-        alert(err.response.data);
+      // Ensure that updatedCalories1 is a number
+      if (!isNaN(updatedCalories1)) {
+        setCalories1(updatedCalories1);
+
+        const cal = Number(updatedCalories1);
+        let cal1 = Number(totalCalories);
+        cal1 = setTotalCalories(cal);
+        const tt = Number(calories + updatedCalories1); // Update the total calories without calories1
+        setTotalCalories(tt);
+        console.log("Calories: " + totalCalories);
+        const obj = {
+          username,
+          workoutType: record.workoutType,
+          selectedWorkoutType: record.selectedWorkoutType,
+          date: record.date,
+          fromTime: record.fromTime,
+          toTime: record.toTime,
+          calories: updatedCalories1, // Include the updated calories value here
+          totalCalories: tt,
+        };
+        console.log(record);
+        // const url = "http://localhost:5500/history/create";
+        const url =
+          "https://react-backend-production-62ec.up.railway.app/history/create";
+
+        try {
+          const response = axios.post(url, obj);
+
+          if (response.status === 200) {
+            console.log(obj);
+            // Optionally, you can reset the calories state after a successful submission
+            setCalories("");
+            window.location.reload();
+          }
+        } catch (err) {
+          if (err.response && err.response.status === 400) {
+            alert(err.response.data);
+          } else {
+            alert(err.message);
+          }
+        }
       } else {
-        alert(err.message);
+        alert("Calories calculation resulted in NaN.");
       }
+    } else {
+      alert("Invalid weight or calories value. Ensure they are valid numbers.");
     }
 
     // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
@@ -530,7 +549,6 @@ function Home() {
 
     window.location.reload();
   };
-
   const handleDelete1 = async (index, record) => {
     const obj = {
       username,
@@ -610,9 +628,22 @@ function Home() {
     setEditedRecord({ ...editedRecord, toTime: e.target.value });
   };
 
+  const handleEditClick = (index) => {
+    setIsCardEditing(true);
+    setCardToEditIndex(index);
+  };
+
   return (
     <div style={backgroundStyle}>
       <div style={overlayStyle}></div>
+      <style>
+        {`
+          .background-container {
+            filter: blur(6px);
+            background-color: rgba(255, 255, 255, 0.7); /* Adjust the background color and opacity as needed */
+          }
+        `}
+      </style>
       <Navbar style={navbarStyle}>
         <Container>
           <Navbar.Brand href="" className="mx-auto" style={bold}>
@@ -708,6 +739,7 @@ function Home() {
       </h1>
       <br />
       <br />
+      {calories1}
       <div>
         <Card className="mx-auto" style={{ width: "600px" }}>
           <Card.Body>
@@ -877,7 +909,11 @@ function Home() {
             {data.map((record, index) => (
               <Col key={index} xs={12} sm={6} md={4} lg={4}>
                 <Card
-                  className={cardColors[selectedValue]}
+                  className={`${
+                    isCardEditing && index === cardToEditIndex
+                      ? "card-highlight"
+                      : ""
+                  }`}
                   style={{ margin: "10px" }}
                 >
                   <Card.Body>
@@ -929,17 +965,17 @@ function Home() {
                               >
                                 <Form.Label
                                   column
-                                  sm={5}
+                                  sm={6}
                                   style={{ fontWeight: "bold" }}
                                 >
-                                  Calories Burnt
+                                  Workout Duration
                                 </Form.Label>
-                                <Col sm={5}>
+                                <Col sm={12}>
                                   <Form.Control
                                     type="number"
-                                    placeholder="Enter number of calories burnt"
+                                    placeholder="Enter Workout Duration in mins"
                                     onChange={(e) =>
-                                      setCalories(e.target.value)
+                                      setCalories1(e.target.value)
                                     }
                                   />
                                 </Col>
@@ -960,9 +996,14 @@ function Home() {
                         <div>
                           {isEdit && index === editingIndex ? (
                             // Edit form
-                            <Form onSubmit={handleUpdate}>
+                            <Form
+                              onSubmit={handleUpdate}
+                              className="card-highlight"
+                            >
                               <Form.Group>
-                                <Form.Label>Workout Type</Form.Label>
+                                <Form.Label style={{ fontWeight: "bold" }}>
+                                  Workout Type
+                                </Form.Label>
                                 <Form.Control
                                   value={editedRecord.workoutType}
                                   onChange={handleEditWorkoutTypeChange}
@@ -1025,7 +1066,11 @@ function Home() {
                                 className="mb-3"
                                 controlId="formHorizontalPassword"
                               >
-                                <Form.Label column sm={6}>
+                                <Form.Label
+                                  column
+                                  sm={6}
+                                  style={{ fontWeight: "bold" }}
+                                >
                                   Type of workout:
                                 </Form.Label>
                                 <Col sm={12}>
@@ -1056,7 +1101,11 @@ function Home() {
                                 className="mb-3"
                                 controlId="formHorizontalEmail"
                               >
-                                <Form.Label column sm={6}>
+                                <Form.Label
+                                  column
+                                  sm={6}
+                                  style={{ fontWeight: "bold" }}
+                                >
                                   Date and Time:
                                 </Form.Label>
                                 <Col sm={15}>
