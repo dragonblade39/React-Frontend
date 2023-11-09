@@ -492,7 +492,7 @@ function Home() {
           fromTime: record.fromTime,
           toTime: record.toTime,
           calories: updatedCalories1, // Include the updated calories value here
-          totalCalories: tt,
+          totalCalories: totalCalories,
         };
         console.log(record);
         // const url = "http://localhost:5500/history/create";
