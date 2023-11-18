@@ -207,6 +207,7 @@ function Update() {
     maxWidth: "800px", // Set the maximum width
     margin: "0 auto", // Center the card horizontally
     borderRadius: "10px",
+    boxShadow: " rgba(0, 0, 0, 0.35) 0px 5px 15px",
   };
 
   const cardBodyStyle = {
@@ -300,7 +301,9 @@ function Update() {
               height="100"
               className="d-inline-block align-top"
             />{" "}
-            Fitness Tracker
+            <span style={{ textShadow: "0px 0px 6px rgba(6,0,0,0.6)" }}>
+              Fitness Tracker
+            </span>
           </Navbar.Brand>
         </Container>
       </Navbar>

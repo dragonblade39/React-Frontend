@@ -122,7 +122,11 @@ function TasksHistory() {
       <br />
       <center>
         <h1>
-          <span style={{ fontWeight: "bold" }}>Username: </span>
+          <span style={{ fontWeight: "bold" }}>
+            <span style={{ textShadow: "0px 0px 6px rgba(6,0,0,0.1)" }}>
+              Username: &nbsp;
+            </span>
+          </span>
           <span style={{ color: "red" }}>{username}</span>
         </h1>
       </center>
@@ -135,7 +139,13 @@ function TasksHistory() {
             <h1>Tasks</h1>
             {data.map((record, index) => (
               <Col key={index} xs={12} sm={6} md={4} lg={4}>
-                <Card style={{ margin: "10px" }}>
+                <Card
+                  style={{
+                    background: "linear-gradient(to left,#C9E9E5,#77D5CB)",
+                    boxShadow: " rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    margin: "10px",
+                  }}
+                >
                   <Card.Body>
                     <div>
                       <center>

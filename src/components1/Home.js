@@ -17,6 +17,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { Card, CardColumns } from "react-bootstrap";
 import Carousel1 from "./Carousel1";
 import Spinner from "react-bootstrap/Spinner";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Home() {
   const [workoutType, setWorkoutType] = useState("");
@@ -205,6 +206,7 @@ function Home() {
     top: "0", // Stick to the top of the page
     zIndex: "100", // Add z-index to ensure it's above other elements
     background: "linear-gradient(to right , #DCF0ED,#C0E6E1)",
+    //boxShadow: " rgba(0, 0, 0, 0.35) 0px 5px 15px",
   };
 
   const bold = {
@@ -216,17 +218,23 @@ function Home() {
     fontWeight: "500",
     color: "black",
     marginTop: "-40px",
-    paddingRight: "30px",
+    paddingRight: "20px",
   };
 
   const bold2 = {
-    fontSize: "20px",
+    fontSize: "25px",
     fontWeight: "500",
     marginTop: "-40px",
+    padding: "1px 6px",
+    //marginBottom: "20px",
+    marginRight: "-80px",
+    background: "black",
   };
 
   const logout = () => {
+    setLoading(true);
     username = "";
+    setLoading(false);
     navigate("/");
   };
   const scrollToTop = () => {
@@ -698,52 +706,83 @@ function Home() {
               height="100"
               className="d-inline-block align-top"
             />{" "}
-            Fitness Tracker
+            <span style={{ textShadow: "0px 0px 6px rgba(6,0,0,0.6)" }}>
+              Fitness Tracker
+            </span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <Nav.Link
-                style={bold1}
+                style={{
+                  ...bold1,
+                  borderRight: "2px solid black",
+                  textShadow: "0px 0px 6px rgba(1,0,0,0.3)",
+                }}
                 as={Link}
                 to="/dashboard"
                 state={{ username }}
                 onClick={scrollToTop}
               >
-                Home
+                <i className="bi bi-house-fill"></i>
+                &nbsp;Home
               </Nav.Link>
               <Nav.Link
-                style={bold1}
+                style={{
+                  ...bold1,
+                  borderRight: "2px solid black",
+                  textShadow: "0px 0px 6px rgba(1,0,0,0.3)",
+                }}
                 as={Link}
                 to="/taskshistory"
                 state={{ username }}
               >
-                Tasks History
+                <i className="bi bi-hourglass-split"></i>
+                &nbsp;Tasks History
               </Nav.Link>
               <Nav.Link
+                style={{
+                  ...bold1,
+                  borderRight: "2px solid black",
+                  textShadow: "0px 0px 6px rgba(1,0,0,0.3)",
+                }}
                 href="/profile"
-                style={bold1}
                 as={Link}
                 to="/profile"
                 state={{ username }}
               >
-                Profile
+                <i className="bi bi-person-circle"></i>
+                &nbsp;Profile
               </Nav.Link>
               <Nav.Link
-                style={bold1}
+                style={{
+                  ...bold1,
+                  borderRight: "2px solid black",
+                  textShadow: "0px 0px 6px rgba(1,0,0,0.3)",
+                }}
                 as={Link}
                 to="/update"
                 state={{ username }}
               >
-                Edit Info
+                <i className="bi bi-person-lines-fill"></i>
+                &nbsp;Update
               </Nav.Link>
-              <Button onClick={logout} style={bold2}>
-                Logout
+              <span style={{ marginRight: "15px" }}></span>
+              <Button
+                onClick={logout}
+                style={{
+                  ...bold2,
+                  textShadow: "0px 0px 6px rgba(250,250,250,0.9)",
+                }}
+              >
+                <i className="bi bi-door-open-fill"></i>
+                &nbsp; Logout
               </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
       <h1
         className="animated-text"
         style={{ marginLeft: "10%", marginTop: "2%" }}
@@ -785,7 +824,14 @@ function Home() {
       <br />
       {calories1}
       <div>
-        <Card className="mx-auto" style={{ width: "600px" }}>
+        <Card
+          className="mx-auto"
+          style={{
+            width: "600px",
+            background: "linear-gradient(to left,#C9E9E5,#77D5CB)",
+            boxShadow: " rgba(0, 0, 0, 0.35) 0px 5px 15px",
+          }}
+        >
           <Card.Body>
             <InputGroup hasValidation>
               <Form onSubmit={handleFormSubmit}>
@@ -866,6 +912,9 @@ function Home() {
                     as={Row}
                     className="mb-3"
                     controlId="formHorizontalPassword"
+                    style={{
+                      background: "linear-gradient(to left,#C9E9E5,#77D5CB)",
+                    }}
                   >
                     <Form.Label column sm={4}>
                       Type of workout:
@@ -958,7 +1007,11 @@ function Home() {
                       ? "card-highlight"
                       : ""
                   }`}
-                  style={{ margin: "10px" }}
+                  style={{
+                    margin: "10px",
+                    background: "linear-gradient(to left,#C9E9E5,#77D5CB)",
+                    boxShadow: " rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                  }}
                 >
                   <Card.Body>
                     <div>
@@ -1267,6 +1320,7 @@ function Home() {
       </Container>
       <br />
       <br />
+      {currentSchedule}
       <br />
       <div class="abc">
         <Carousel1 />

@@ -158,7 +158,9 @@ function SignUp() {
               height="100"
               className="d-inline-block align-top"
             />{" "}
-            Fitness Tracker
+            <span style={{ textShadow: "0px 0px 6px rgba(6,0,0,0.6)" }}>
+              Fitness Tracker
+            </span>
           </Navbar.Brand>
         </Container>
       </Navbar>
@@ -171,7 +173,7 @@ function SignUp() {
             style={{
               background: "linear-gradient(135deg,#47BDBF , #79ABB6)", // Gradient background
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              padding: "20px",
+              padding: "20px",boxShadow: " rgba(0, 0, 0, 0.35) 0px 5px 15px"
             }}
           >
             <Form noValidate onSubmit={handleSubmit}>
