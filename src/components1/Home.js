@@ -16,6 +16,7 @@ import Row from "react-bootstrap/Row";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Card, CardColumns } from "react-bootstrap";
 import Carousel1 from "./Carousel1";
+import Spinner from "react-bootstrap/Spinner";
 
 function Home() {
   const [workoutType, setWorkoutType] = useState("");
@@ -50,6 +51,7 @@ function Home() {
   const [currentSchedule, setCurrentSchedule] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState([
     // Your array of records goes here
   ]);
@@ -102,7 +104,9 @@ function Home() {
         } else {
           alert("An error occurred: " + err.message);
         }
-        setIsLoading(false); // Error occurred, set isLoading to false
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false whether the request was successful or not
       });
   }, []);
 
@@ -333,6 +337,7 @@ function Home() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     // Create a FormData object to serialize the form data
     const obj = {
@@ -382,6 +387,7 @@ function Home() {
       .then((res) => {
         if (res.status === 200) {
           console.log(obj);
+          setLoading(false);
           window.location.reload();
         }
       })
@@ -417,11 +423,13 @@ function Home() {
   }, [username]);
 
   const handleDelete = (index) => {
+    setLoading(true);
     const updatedRecords = [...records];
     updatedRecords.splice(index, 1);
     setRecords(updatedRecords);
     setDisplayNewForm(true); // Set to true to display the new form
     setCardToDeleteIndex(index);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -465,6 +473,7 @@ function Home() {
   };
 
   const updateCalories = async (index, record) => {
+    setLoading(true);
     const weight1 = Number(weight);
     const caloriesValue = Number(calories1);
 
@@ -478,8 +487,7 @@ function Home() {
 
         const cal = Number(updatedCalories1);
         let cal1 = Number(totalCalories);
-        cal1 = setTotalCalories(cal);
-        const tt = Number(calories + updatedCalories1); // Update the total calories without calories1
+        const tt = totalCalories + updatedCalories1; // Update the total calories without calories1
         setTotalCalories(tt);
         console.log("Calories: " + totalCalories);
         const obj = {
@@ -490,7 +498,7 @@ function Home() {
           fromTime: record.fromTime,
           toTime: record.toTime,
           calories: updatedCalories1, // Include the updated calories value here
-          totalCalories: totalCalories,
+          totalCalories: tt,
         };
         console.log(record);
         // const url = "http://localhost:5500/history/create";
@@ -543,10 +551,11 @@ function Home() {
     } catch (err) {
       alert("An error occurred while deleting the user: " + err.message);
     }
-
+    setLoading(false);
     window.location.reload();
   };
   const handleDelete1 = async (index, record) => {
+    setLoading(true);
     const obj = {
       username,
       workoutType: record.workoutType,
@@ -580,11 +589,12 @@ function Home() {
     } catch (err) {
       alert("An error occurred while deleting the user: " + err.message);
     }
-
+    setLoading(false);
     window.location.reload();
   };
 
   const handleUpdate = (index, record, event) => {
+    setLoading(true);
     setIsEdit(true);
     setEditingIndex(index);
     setEditedRecord({ ...record });
@@ -602,6 +612,7 @@ function Home() {
         // Handle errors (e.g., display an error message to the user)
         console.error("Update failed", error);
       });
+    setLoading(false);
   };
 
   const handleEditWorkoutTypeChange = (e) => {
@@ -629,6 +640,42 @@ function Home() {
     setIsCardEditing(true);
     setCardToEditIndex(index);
   };
+
+  const loadingContainerStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000, // Set a higher z-index to appear above other elements
+  };
+
+  const blurOverlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `url(${bg})`,
+    backgroundSize: "100%", // Zoom out the background image
+    filter: "blur(5px)", // Add blur effect
+    zIndex: -1, // Behind the loading content
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div style={blurOverlayStyle}></div>
+        <div style={loadingContainerStyle}>
+          <Spinner animation="border" role="status"></Spinner>
+          <h1 className="sr-only">&nbsp;&nbsp;Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={backgroundStyle}>

@@ -6,25 +6,34 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
+import Spinner from "react-bootstrap/Spinner";
 import logo from "../images/logo.png";
 import axios from "axios";
 import bg from "../images/bg.jpg"; // Make sure the path to the image is correct
 import { Link } from "react-router-dom";
 import "../styles/SignUp.module.css";
 import { FormGroup } from "@mui/material";
+
 function SignUp() {
-  const [name, setName] = useState();
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [password1, setPassword1] = useState();
-  const [gender, setGender] = useState("Male");
-  const [date, setDate] = useState();
-  const [height, setHeight] = useState();
-  const [weight, setWeight] = useState();
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [gender, setGender] = useState("");
+  const [date, setDate] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [loading, setLoading] = useState(false);
+
   let handleSubmit = (event) => {
+    event.preventDefault();
+
+    setLoading(true); // Set loading to true when the form is submitted
+
     const bmi = (weight / ((height / 100) * (height / 100))).toFixed(2);
     console.log(bmi);
+
     const obj = {
       name,
       username,
@@ -38,24 +47,29 @@ function SignUp() {
       bmi,
     };
     console.log(obj);
+
     // const url = "http://localhost:5500/signup/create-fitness";
     const url = "https://react-backend-cdll.onrender.com/signup/create-fitness";
+
     axios
       .post(url, obj)
       .then((res) => {
+        setLoading(false); // Set loading to false when the request is completed
+
         if (res.status === 200) {
-          alert("User added successfully Go to login page to login");
+          alert("User added successfully. Go to the login page to log in");
           window.location.href = "/";
         }
       })
       .catch((err) => {
+        setLoading(false); // Set loading to false on error
+
         if (err.response && err.response.status === 400) {
           alert(err.response.data); // Display the response data from the server
         } else {
           alert("An error occurred: " + err.message);
         }
       });
-    event.preventDefault();
   };
 
   const navbarStyle = {
@@ -94,7 +108,41 @@ function SignUp() {
     paddingRight: "10%",
   };
 
-  const [validated, setValidated] = useState(false);
+  const loadingContainerStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000, // Set a higher z-index to appear above other elements
+  };
+
+  const blurOverlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `url(${bg})`,
+    backgroundSize: "100%", // Zoom out the background image
+    filter: "blur(5px)", // Add blur effect
+    zIndex: -1, // Behind the loading content
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div style={blurOverlayStyle}></div>
+        <div style={loadingContainerStyle}>
+          <Spinner animation="border" role="status"></Spinner>
+          <h1 className="sr-only">&nbsp;&nbsp;Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={backgroundStyle}>
@@ -128,7 +176,7 @@ function SignUp() {
           >
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group controlId="formGroupName" style={formGroupStyle}>
-                <Form.Label style={labelStyle} for="name">
+                <Form.Label style={labelStyle} htmlFor="name">
                   Name
                 </Form.Label>
                 <Form.Control
@@ -143,7 +191,7 @@ function SignUp() {
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="formGroupUsername" style={formGroupStyle}>
-                <Form.Label for="username" style={labelStyle}>
+                <Form.Label htmlFor="username" style={labelStyle}>
                   Username
                 </Form.Label>
                 <Form.Control
@@ -158,7 +206,7 @@ function SignUp() {
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="formGroupEmail" style={formGroupStyle}>
-                <Form.Label for="email" style={labelStyle}>
+                <Form.Label htmlFor="email" style={labelStyle}>
                   Email address
                 </Form.Label>
                 <Form.Control
@@ -168,13 +216,12 @@ function SignUp() {
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />
-
                 <Form.Control.Feedback type="invalid">
                   Please choose a correct email.
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="formGroupPassword" style={formGroupStyle}>
-                <Form.Label for="password" style={labelStyle}>
+                <Form.Label htmlFor="password" style={labelStyle}>
                   Password
                 </Form.Label>
                 <Form.Control
@@ -184,7 +231,6 @@ function SignUp() {
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
-
                 <Form.Control.Feedback type="invalid">
                   Please choose a password.
                 </Form.Control.Feedback>
@@ -193,7 +239,7 @@ function SignUp() {
                 controlId="formGroupConfirmPassword"
                 style={formGroupStyle}
               >
-                <Form.Label for="password1" style={labelStyle}>
+                <Form.Label htmlFor="password1" style={labelStyle}>
                   Confirm Password
                 </Form.Label>
                 <Form.Control
@@ -209,7 +255,7 @@ function SignUp() {
               </Form.Group>
 
               <FormGroup style={formGroupStyle}>
-                <Form.Label for="gender" style={labelStyle}>
+                <Form.Label htmlFor="gender" style={labelStyle}>
                   Gender
                 </Form.Label>
                 <Form.Select
@@ -218,7 +264,11 @@ function SignUp() {
                   id="gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
+                  defaultValue=""
                 >
+                  <option value="" disabled hidden>
+                    Select Your Gender
+                  </option>
                   <option
                     onSelect={(e) => setGender(e.target.value)}
                     value="Male"
@@ -231,13 +281,25 @@ function SignUp() {
                   >
                     Female
                   </option>
+                  <option
+                    onSelect={(e) => setGender(e.target.value)}
+                    value="transgender"
+                  >
+                    Transgender
+                  </option>
+                  <option
+                    onSelect={(e) => setGender(e.target.value)}
+                    value="mentionnot"
+                  >
+                    Mention Not
+                  </option>
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">
                   Please select your Gender.
                 </Form.Control.Feedback>
               </FormGroup>
               <Form.Group controlId="formGroupheight" style={formGroupStyle}>
-                <Form.Label for="height" style={labelStyle}>
+                <Form.Label htmlFor="height" style={labelStyle}>
                   Height
                 </Form.Label>
                 <Form.Control
@@ -252,7 +314,7 @@ function SignUp() {
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="formGroupweight" style={formGroupStyle}>
-                <Form.Label for="weight" style={labelStyle}>
+                <Form.Label htmlFor="weight" style={labelStyle}>
                   Weight
                 </Form.Label>
                 <Form.Control
@@ -267,7 +329,7 @@ function SignUp() {
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group controlId="formGroupDob" style={formGroupStyle}>
-                <Form.Label for="password1" style={labelStyle}>
+                <Form.Label htmlFor="password1" style={labelStyle}>
                   Date of Birth
                 </Form.Label>
                 <Form.Control

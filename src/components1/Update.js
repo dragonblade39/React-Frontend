@@ -12,6 +12,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 function Update() {
   const location = useLocation();
@@ -28,6 +29,7 @@ function Update() {
   const navigate = useNavigate();
   const [bmi, setBmi] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (username === null) {
@@ -40,6 +42,7 @@ function Update() {
     const newBmi = (weight / ((height / 100) * (height / 100))).toFixed(2);
     console.log(newBmi);
     setIsUpdating(true);
+    setLoading(true);
 
     if (newBmi == undefined) setBmi(newBmi);
 
@@ -76,6 +79,7 @@ function Update() {
       .then((res) => {
         setIsUpdating(false);
         if (res.status === 200) {
+          setLoading(false);
           alert("Profile updated successfully");
         } else {
           alert("Profile update failed");
@@ -93,6 +97,7 @@ function Update() {
     );
 
     if (shouldDelete) {
+      setLoading(true);
       // The user confirmed the deletion
       // const url = `http://localhost:5500/signup/update/${username}`;
       const url = `https://react-backend-cdll.onrender.com/signup/update/${username}`;
@@ -100,6 +105,7 @@ function Update() {
         .delete(url)
         .then((res) => {
           if (res.status === 200) {
+            setLoading(false);
             alert("User deleted successfully");
             navigate("/signup");
           } else if (res.status === 404) {
@@ -235,12 +241,51 @@ function Update() {
         } else {
           alert("An error occurred: " + err.message);
         }
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false whether the request was successful or not
       });
   }, [username]); // Add username as a dependency to the useEffect
 
   let goback = () => {
     navigate("/profile");
   };
+
+  const loadingContainerStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000, // Set a higher z-index to appear above other elements
+  };
+
+  const blurOverlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `url(${bg})`,
+    backgroundSize: "100%", // Zoom out the background image
+    filter: "blur(5px)", // Add blur effect
+    zIndex: -1, // Behind the loading content
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div style={blurOverlayStyle}></div>
+        <div style={loadingContainerStyle}>
+          <Spinner animation="border" role="status"></Spinner>
+          <h1 className="sr-only">&nbsp;&nbsp;Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={backgroundStyle}>

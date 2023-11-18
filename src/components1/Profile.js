@@ -12,6 +12,7 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 function Profile() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function Profile() {
   const [weight, setWeight] = useState("");
   const [age, setAge] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   const backgroundStyle = {
     backgroundRepeat: `no-repeat`,
@@ -108,6 +110,9 @@ function Profile() {
         } else {
           alert("An error occurred: " + err.message);
         }
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false whether the request was successful or not
       });
   }, []);
 
@@ -119,6 +124,42 @@ function Profile() {
     navigate("/dashboard");
     return null;
   };
+
+  const loadingContainerStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000, // Set a higher z-index to appear above other elements
+  };
+
+  const blurOverlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `url(${bg})`,
+    backgroundSize: "100%", // Zoom out the background image
+    filter: "blur(5px)", // Add blur effect
+    zIndex: -1, // Behind the loading content
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div style={blurOverlayStyle}></div>
+        <div style={loadingContainerStyle}>
+          <Spinner animation="border" role="status"></Spinner>
+          <h1 className="sr-only">&nbsp;&nbsp;Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={backgroundStyle}>

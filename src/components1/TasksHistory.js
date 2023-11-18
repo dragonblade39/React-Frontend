@@ -14,6 +14,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Card, CardColumns } from "react-bootstrap";
+import Spinner from "react-bootstrap/Spinner";
 
 function TasksHistory() {
   const [workoutType, setWorkoutType] = useState("");
@@ -26,6 +27,7 @@ function TasksHistory() {
   const [cardToDeleteIndex, setCardToDeleteIndex] = useState(-1);
   const [calories, setCalories] = useState("");
   const [totalCalories, setTotalCalories] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation();
   let username = location.state ? location.state.username : null;
@@ -51,9 +53,13 @@ function TasksHistory() {
         // const response = await axios.get(
         //   `http://localhost:5500/history?username=${username}`
         // );
-        const response = await axios.get(
-          `https://react-backend-cdll.onrender.com/history?username=${username}`
-        );
+        const response = await axios
+          .get(
+            `https://react-backend-cdll.onrender.com/history?username=${username}`
+          )
+          .finally(() => {
+            setLoading(false); // Set loading to false whether the request was successful or not
+          });
         setData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -74,6 +80,42 @@ function TasksHistory() {
     minHeight: "100vh",
     position: "relative",
   };
+
+  const loadingContainerStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000, // Set a higher z-index to appear above other elements
+  };
+
+  const blurOverlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `url(${bg})`,
+    backgroundSize: "100%", // Zoom out the background image
+    filter: "blur(5px)", // Add blur effect
+    zIndex: -1, // Behind the loading content
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <div style={blurOverlayStyle}></div>
+        <div style={loadingContainerStyle}>
+          <Spinner animation="border" role="status"></Spinner>
+          <h1 className="sr-only">&nbsp;&nbsp;Loading...</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={backgroundStyle}>
