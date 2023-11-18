@@ -344,6 +344,7 @@ function Home() {
   };
 
   const handleFormSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     setLoading(true);
 
@@ -406,6 +407,7 @@ function Home() {
           alert(err.message);
         }
       });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -524,15 +526,19 @@ function Home() {
         } catch (err) {
           if (err.response && err.response.status === 400) {
             alert(err.response.data);
+            setLoading(false);
           } else {
             alert(err.message);
+            setLoading(false);
           }
         }
       } else {
         alert("Calories calculation resulted in NaN.");
+        setLoading(false);
       }
     } else {
       alert("Invalid weight or calories value. Ensure they are valid numbers.");
+      setLoading(false);
     }
 
     // const url2 = `http://localhost:5500/data/deleteTask/${username}/${record.selectedWorkoutType}`;
