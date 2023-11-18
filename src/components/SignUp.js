@@ -39,7 +39,7 @@ function SignUp() {
     };
     console.log(obj);
     // const url = "http://localhost:5500/signup/create-fitness";
-    const url = "https://react-backend-production-62ec.up.railway.app/signup/create-fitness";
+    const url = "https://react-backend-cdll.onrender.com/signup/create-fitness";
     axios
       .post(url, obj)
       .then((res) => {

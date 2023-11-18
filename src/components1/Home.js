@@ -82,8 +82,7 @@ function Home() {
   useEffect(() => {
     const obj = { username };
     // const url = "http://localhost:5500/signup/homepage";
-    const url =
-      "https://react-backend-production-62ec.up.railway.app/signup/homepage";
+    const url = "https://react-backend-cdll.onrender.com/signup/homepage";
     axios
       .post(url, obj)
       .then((res) => {
@@ -377,8 +376,7 @@ function Home() {
     }
 
     // const url = "http://localhost:5500/data/createTask";
-    const url =
-      "https://react-backend-production-62ec.up.railway.app/data/createTask";
+    const url = "https://react-backend-cdll.onrender.com/data/createTask";
     await axios
       .post(url, obj)
       .then((res) => {
@@ -404,7 +402,7 @@ function Home() {
         //   `http://localhost:5500/data?username=${username}`
         // );
         const response = await axios.get(
-          `https://react-backend-production-62ec.up.railway.app/data?username=${username}`
+          `https://react-backend-cdll.onrender.com/data?username=${username}`
         );
         setData(response.data);
         console.log(response.data);
@@ -434,7 +432,7 @@ function Home() {
         //   `http://localhost:5500/history/totalCalories?username=${username}`
         // );
         const response = await axios.get(
-          `https://react-backend-production-62ec.up.railway.app/history/totalCalories?username=${username}`
+          `https://react-backend-cdll.onrender.com/history/totalCalories?username=${username}`
         );
         const totalCalories = response.data.totalCalories; // Assuming the total calories are in the 'totalCalories' field of the response
         setTotalCalories(totalCalories);
@@ -472,7 +470,7 @@ function Home() {
 
     if (!isNaN(weight) && !isNaN(caloriesValue)) {
       // Calculate calories1 with the given formula
-      const updatedCalories1 = ((8 * 3.5 * weight) / 200) * caloriesValue;
+      const updatedCalories1 = ((3.65 * 3.5 * weight) / 200) * caloriesValue;
 
       // Ensure that updatedCalories1 is a number
       if (!isNaN(updatedCalories1)) {
@@ -496,8 +494,7 @@ function Home() {
         };
         console.log(record);
         // const url = "http://localhost:5500/history/create";
-        const url =
-          "https://react-backend-production-62ec.up.railway.app/history/create";
+        const url = "https://react-backend-cdll.onrender.com/history/create";
 
         try {
           const response = axios.post(url, obj);
@@ -526,7 +523,7 @@ function Home() {
     // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
     try {
       const deleteResponse = await axios.delete(
-        "https://react-backend-production-62ec.up.railway.app/data/deleteTask",
+        "https://react-backend-cdll.onrender.com/data/deleteTask",
         {
           data: {
             username: username,
@@ -564,7 +561,7 @@ function Home() {
 
     try {
       const response = await axios.delete(
-        "https://react-backend-production-62ec.up.railway.app/data/deleteTask",
+        "https://react-backend-cdll.onrender.com/data/deleteTask",
         {
           data: {
             username: username,
@@ -594,7 +591,7 @@ function Home() {
     axios
       // .post(`http://localhost:5500/data/updateTask/`, editedRecord)
       .post(
-        `https://react-backend-production-62ec.up.railway.app/data/updateTask/`,
+        `https://react-backend-cdll.onrender.com/data/updateTask/`,
         editedRecord
       )
 

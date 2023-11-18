@@ -70,8 +70,7 @@ function Update() {
     }
     console.log(updatedData);
     // const url = "http://localhost:5500/signup/update"; // Update the URL
-    const url =
-      "https://react-backend-production-62ec.up.railway.app/signup/update";
+    const url = "https://react-backend-cdll.onrender.com/signup/update";
     axios
       .post(url, updatedData)
       .then((res) => {
@@ -96,7 +95,7 @@ function Update() {
     if (shouldDelete) {
       // The user confirmed the deletion
       // const url = `http://localhost:5500/signup/update/${username}`;
-      const url = `https://react-backend-production-62ec.up.railway.app/signup/update/${username}`;
+      const url = `https://react-backend-cdll.onrender.com/signup/update/${username}`;
       axios
         .delete(url)
         .then((res) => {
@@ -117,14 +116,11 @@ function Update() {
       // const url = `https://reactbackend-mhmh.onrender.com/signup/update/${username}`;
       axios
         // .delete("http://localhost:5500/data/deleteTasks", {
-        .delete(
-          "https://react-backend-production-62ec.up.railway.app/data/deleteTasks",
-          {
-            data: {
-              username: username,
-            },
-          }
-        )
+        .delete("https://react-backend-cdll.onrender.com/data/deleteTasks", {
+          data: {
+            username: username,
+          },
+        })
         .then((res) => {
           if (res.status === 200) {
           } else if (res.status === 404) {
@@ -140,7 +136,7 @@ function Update() {
       axios
         // .delete("http://localhost:5500/history/deleteTasks1", {
         .delete(
-          "https://react-backend-production-62ec.up.railway.app/history/deleteTasks1",
+          "https://react-backend-cdll.onrender.com/history/deleteTasks1",
           {
             data: {
               username: username,
@@ -217,8 +213,7 @@ function Update() {
     // Make an API request to fetch user data and set the state variables
     const obj = { username };
     // const url = "http://localhost:5500/signup/profile";
-    const url =
-      "https://react-backend-production-62ec.up.railway.app/signup/profile";
+    const url = "https://react-backend-cdll.onrender.com/signup/profile";
     axios
       .post(url, obj)
       .then((res) => {

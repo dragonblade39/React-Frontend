@@ -52,7 +52,7 @@ function TasksHistory() {
         //   `http://localhost:5500/history?username=${username}`
         // );
         const response = await axios.get(
-          `https://react-backend-production-62ec.up.railway.app/history?username=${username}`
+          `https://react-backend-cdll.onrender.com/history?username=${username}`
         );
         setData(response.data);
         console.log(response.data);
