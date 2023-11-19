@@ -1326,7 +1326,6 @@ function Home() {
       </Container>
       <br />
       <br />
-      {currentSchedule}
       <br />
       <div class="abc">
         <Carousel1 />
